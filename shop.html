@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Products — AFTER PARTY</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Fraunces&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#0B0B0C; --surface:#171718; --text:#F5F0E6; --muted:#B8B3AA; --accent:#FFE600; --line:rgba(245,240,230,.16); --display:"Bricolage Grotesque", sans-serif; --body:"Fraunces", serif;}
+  body{margin:0; background:var(--bg); color:var(--text); font-family:var(--body); padding-bottom:60px}
+  .wrap{max-width:1140px; margin-inline:auto; padding-inline:20px}
+  header{padding:20px 0; border-bottom:1px solid var(--line); margin-bottom:40px}
+  a{color:inherit; text-decoration:none}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:24px}
+  
+  /* Shared Peanut Card Layout */
+  .p-card{border:1px solid var(--line); border-radius:18px; background:var(--surface); padding:20px; display:flex; flex-direction:column; gap:14px; transition:transform 0.2s}
+  .p-card:hover{transform:translateY(-4px)}
+  .p-image-box{width:100%; height:200px; border-radius:12px; background:#121214; display:grid; place-items:center; border:1px solid var(--line); position:relative; overflow:hidden}
+  .p-badge{position:absolute; top:10px; right:10px; background:var(--accent); color:#000; font-family:var(--display); font-weight:800; font-size:0.7rem; padding:4px 8px; border-radius:4px}
+  .p-title{font-family:var(--display); font-size:1.25rem; margin:0}
+  .p-desc{font-size:0.9rem; color:var(--muted); margin:0; flex-grow:1}
+  .p-footer{display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--line); padding-top:12px}
+  .p-price{font-family:var(--display); font-weight:800; font-size:1.1rem}
+  .btn{font-family:var(--display); font-weight:700; padding:8px 16px; border-radius:99px; background:var(--accent); color:#000; border:none; cursor:pointer}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap" style="display:flex; justify-content:space-between; align-items:center;">
+    <a href="/" style="font-family:var(--display); font-weight:800; font-size:1.3rem; color:var(--accent);">AFTER PARTY</a>
+    <nav style="display:flex; gap:20px; font-family:var(--display);">
+      <a href="/">Home</a>
+      <a href="/order-final">My Order</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1 style="font-family:var(--display); font-size:2.5rem; margin-bottom:8px;">Functional Peanut Lineup</h1>
+  <p style="color:var(--muted); margin-bottom:32px;">Four distinct flavor profiles crafted for late-night cravings and morning recharge.</p>
+
+  <div class="grid">
+    <!-- Product 1 -->
+    <article class="p-card">
+      <div class="p-image-box">
+        <span class="p-badge">SPICY / SAVORY</span>
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><circle cx="12" cy="12" r="8"/><path d="M12 8v8"/></svg>
+      </div>
+      <h2 class="p-title">Tamarind Chilli Peanuts</h2>
+      <p class="p-desc">Tangy tamarind bite with slow chilli warmth. Fortified with electrolytes and high fiber.</p>
+      <div class="p-footer">
+        <span class="p-price">₹99 <small style="font-weight:400; font-size:0.75rem;">/ 145g</small></span>
+        <a href="/order-final?item=tamarind-chilli" class="btn">Order Now</a>
+      </div>
+    </article>
+
+    <!-- Product 2 -->
+    <article class="p-card">
+      <div class="p-image-box">
+        <span class="p-badge">SWEET / SAVORY</span>
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#FF2A2A" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <h2 class="p-title">Smoked Caramel Peanuts</h2>
+      <p class="p-desc">Rich caramel sweetness balanced by sea salt. Plant-protein rich for late-night replenishment.</p>
+      <div class="p-footer">
+        <span class="p-price">₹99 <small style="font-weight:400; font-size:0.75rem;">/ 145g</small></span>
+        <a href="/order-final?item=smoked-caramel" class="btn">Order Now</a>
+      </div>
+    </article>
+
+    <!-- Product 3 -->
+    <article class="p-card">
+      <div class="p-image-box">
+        <span class="p-badge">ZESTY</span>
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#7CE0A8" stroke-width="1.5"><path d="M12 3v18M3 12h18"/></svg>
+      </div>
+      <h2 class="p-title">Lime & Pepper Peanuts</h2>
+      <p class="p-desc">Zesty citrus kick blended with cracked black pepper and antioxidants to cut through fatigue.</p>
+      <div class="p-footer">
+        <span class="p-price">₹99 <small style="font-weight:400; font-size:0.75rem;">/ 145g</small></span>
+        <a href="/order-final?item=lime-pepper" class="btn">Order Now</a>
+      </div>
+    </article>
+
+    <!-- Product 4 -->
+    <article class="p-card">
+      <div class="p-image-box">
+        <span class="p-badge">EXTRA SPICY</span>
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+      </div>
+      <h2 class="p-title">Ghost Pepper Crunch</h2>
+      <p class="p-desc">Bold heat profile designed to wake up tastebuds and jumpstart metabolism post-event.</p>
+      <div class="p-footer">
+        <span class="p-price">₹99 <small style="font-weight:400; font-size:0.75rem;">/ 145g</small></span>
+        <a href="/order-final?item=ghost-pepper" class="btn">Order Now</a>
+      </div>
+    </article>
+  </div>
+</main>
+
+</body>
+</html>
