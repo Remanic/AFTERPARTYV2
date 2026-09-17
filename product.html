@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The range — AFTER PARTY</title>
+<meta name="description" content="Three flavours of AFTER PARTY peanuts: Classic Sweet, Tamarind Chilli and Smoky Chipotle. Nutrition, ingredients and every side of the carton." />
+<meta name="theme-color" content="#1A0B24" />
+<meta property="og:title" content="AFTER PARTY — good snacks, better tomorrows" />
+<meta property="og:description" content="Peanuts for the hour after. Three flavours, 145 g, delivered." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%233A0B3F'/><path d='M55 18 L34 54 h14 l-6 30 22-38 h-14 z' fill='%23FFD21E'/></svg>">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header>
+  <div class="wrap bar">
+    <a class="mark" href="index.html"><img src="assets/logo.png" alt="AFTER PARTY" /></a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="product.html" aria-current="page">The range</a>
+      <a href="product.html#pack">The pack</a>
+      <a href="story.html">Why we exist</a>
+      <a href="index.html#stockists">Where to buy</a>
+    </nav>
+    <a class="cartlink" href="order.html" data-cartcount>Order</a>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="sec first">
+  <div class="wrap">
+    <div class="head">
+      <h2>The range.</h2>
+      <p class="lede">Every carton is 145 g of roasted peanuts with 24 g of plant protein per 100 g. What changes is the coating — and at 1 am, that is the only thing anyone is choosing between.</p>
+    </div>
+    <div class="switch" role="group" aria-label="Switch what the cards show">
+      <button id="btnTaste" aria-pressed="true">What it tastes like</button>
+      <button id="btnFunc" aria-pressed="false">What it's doing</button>
+    </div>
+    <div class="skus" id="skus" data-full="1"></div>
+    <p class="small" style="margin-top:22px">All three carry the vegetarian mark, no artificial colours and no artificial preservatives.</p>
+  </div>
+</section>
+
+<section class="sec" id="pack">
+  <div class="wrap">
+    <div class="head">
+      <h2>Every side of the carton.</h2>
+      <p class="lede">Slide through the flavours and turn the pack around. The front sells the craving, the back carries the proof, and the sides do the talking on a shelf.</p>
+    </div>
+    <div class="explorer">
+      <div class="stage"><div class="cartbox" id="stagebox" style="width:min(88%,340px)"></div></div>
+      <div>
+        <div class="flavslider">
+          <div class="names" id="flavnames"></div>
+          <input id="flav" type="range" min="0" max="2" step="1" value="1" aria-label="Choose a flavour" />
+        </div>
+        <div class="faces" id="faces">
+          <button data-face="front" aria-pressed="true">Front</button>
+          <button data-face="back" aria-pressed="false">Back</button>
+          <button data-face="left" aria-pressed="false">Left side</button>
+          <button data-face="right" aria-pressed="false">Right side</button>
+          <button data-face="top" aria-pressed="false">Top</button>
+        </div>
+        <p class="facenote" id="facenote"></p>
+        <p class="small">Carton: 10.5 × 14.8 × 5 cm, 145 g net. Nutrition shown per 100 g, exactly as it prints on pack.</p>
+        <p style="margin-top:20px"><a class="btn" href="order.html">Order a pack</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="head"><h2>What's actually in it.</h2></div>
+    <div class="rows">
+      <div class="row"><h4>Real peanuts</h4><p>Roasted, not fried in a coating. Peanuts are the first ingredient in all three flavours, by a wide margin.</p><div class="win2">24–25 g protein per 100 g</div></div>
+      <div class="row"><h4>Plant protein</h4><p>All of it from the peanut itself. Nothing isolated, nothing added back in powder form.</p><div class="win2">No whey, vegetarian mark on pack</div></div>
+      <div class="row"><h4>Fibre</h4><p>6 to 8 g per 100 g depending on flavour, which is what keeps a late-night snack from turning into a second one.</p><div class="win2">Highest in Classic Sweet</div></div>
+      <div class="row"><h4>Sodium, kept in check</h4><p>Most late-night salty snacks run far higher. Classic Sweet sits at 320 mg and Tamarind Chilli at 310 mg per 100 g.</p><div class="win2">Smoky trades up to 380 mg for the smoke</div></div>
+      <div class="row"><h4>Nothing artificial</h4><p>No artificial colours and no artificial preservatives in any of the three.</p><div class="win2">Ingredient list fits on one line</div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap fgrid">
+    <div>
+      <img src="assets/logo.png" alt="AFTER PARTY" />
+      <p class="small">Good snacks, better tomorrows. Peanuts made for the hour after, delivered across six metros.</p>
+    </div>
+    <div>
+      <h4>EXPLORE</h4>
+      <ul>
+        <li><a href="product.html">The range</a></li>
+        <li><a href="product.html#pack">The pack</a></li>
+        <li><a href="story.html">Why we exist</a></li>
+        <li><a href="order.html">Order</a></li>
+        <li><a href="index.html#stockists">Where to buy</a></li>
+      </ul>
+    </div>
+    <div class="legal">
+      <p>Contains peanuts. Not for medicinal use. AFTER PARTY makes no therapeutic or curative claim and is not a treatment for the effects of alcohol.</p>
+      <p>This site does not promote the consumption of alcohol and is intended for adults of legal drinking age in their state. Please drink responsibly, and never drive after drinking.</p>
+      <p>Nutrition values are approximate, per 100 g, as printed on pack.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
