@@ -7,9 +7,13 @@ index.html     Landing: hero, the three flavours, where to buy, proof
 product.html   The range in full + the pack explorer (every side of the carton)
 story.html     Research, positioning, who it's for, competition
 order.html     Order page: pick packs, quantities, delivery, checkout
-assets/        styles.css, app.js, logo.png
+styles.css     All styling
+app.js         Flavour data, carton rendering, cart, order flow
+logo.png       Brand logo
 vercel.json    Static config
 ```
+
+All files sit flat at the repository root — no subfolders. Keep it that way; the pages reference `styles.css`, `app.js` and `logo.png` as siblings.
 
 ## Deploy
 
@@ -24,7 +28,7 @@ Navigation between pages is plain relative links, so it works the same locally a
 
 ## Things to set before you go live
 
-1. **WhatsApp number.** `assets/app.js`, in `initOrder()` — replace `910000000000` in the `wa.me` link with your real number in international format (91 + 10 digits).
+1. **WhatsApp number.** `app.js`, in `initOrder()` — replace `910000000000` in the `wa.me` link with your real number in international format (91 + 10 digits).
 2. **Price.** Currently ₹99 per 145 g carton, ₹279 for the Trio, ₹499 for the House Party Pack, free delivery over ₹499. All in the `BUNDLES` array and `FREE_AT` in `app.js`.
 3. **Delivery promise.** "Six metros, two to four days" appears on `order.html`. Make it true or change it.
 4. **Stockist claims.** The landing and order pages say you're on Instamart, Blinkit, BigBasket and Zepto. Only leave those up once the listings are actually live.
@@ -35,4 +39,4 @@ Quantities are stored in `localStorage` under `ap_cart_v1`, so adding from the l
 
 ## Editing the product
 
-Everything about the three flavours — colours, copy, nutrition, ingredients, claims, side-panel lines — lives in the `F` array at the top of `assets/app.js`. The cartons are drawn in HTML and CSS from that data, so one edit updates the hero, the cards, the order page and the pack explorer at once.
+Everything about the three flavours — colours, copy, nutrition, ingredients, claims, side-panel lines — lives in the `F` array at the top of `app.js`. The cartons are drawn in HTML and CSS from that data, so one edit updates the hero, the cards, the order page and the pack explorer at once.

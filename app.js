@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  var LOGO = "assets/logo.png";
+  var LOGO = "logo.png";
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------------- icons ---------------- */
