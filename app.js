@@ -454,46 +454,63 @@
     paintCount();
   }
 
-  /* ---------------- night → morning dial ---------------- */
-  var NIGHT = { bg:[26,11,36], surface:[42,16,56], text:[247,239,221], muted:[192,166,207], accent:[255,210,30], accent2:[255,90,95], line:[247,239,221] };
-  var MORNING = { bg:[247,239,221], surface:[255,255,255], text:[42,11,51], muted:[110,85,120], accent:[196,138,0], accent2:[200,40,45], line:[42,11,51] };
-
-  function lerp(a,b,t){ return a + (b-a)*t; }
-  function mix(a,b,t){ return "rgb(" + Math.round(lerp(a[0],b[0],t)) + "," + Math.round(lerp(a[1],b[1],t)) + "," + Math.round(lerp(a[2],b[2],t)) + ")"; }
-  function mixLine(a,b,t){ return "rgba(" + Math.round(lerp(a[0],b[0],t)) + "," + Math.round(lerp(a[1],b[1],t)) + "," + Math.round(lerp(a[2],b[2],t)) + ",.18)"; }
-  function pad2(n){ return n < 10 ? "0" + n : "" + n; }
+  /* ---------------- time dial: four designed palettes ---------------- */
+  /* Each stop is hand-picked and contrast-checked (every text pairing clears WCAG AA),
+     so there is no muddy in-between state to drag through. CSS transitions blend them. */
+  var STOPS = [
+    { id: "night", label: "1:47", ampm: "am", cap: "deep night",
+      bg: "#150A1F", surface: "#241035", text: "#F8F1E2", muted: "#BCA4CF",
+      accent: "#FFD21E", accentInk: "#FFD21E", onAccent: "#23102E", accent2: "#FF6B6B",
+      line: "248,241,226", lineA: ".15", shadow: "0 18px 40px rgba(0,0,0,.38)" },
+    { id: "late", label: "4:30", ampm: "am", cap: "last one home",
+      bg: "#1E1138", surface: "#2C1A4A", text: "#F4EEE4", muted: "#B6A8DC",
+      accent: "#FFC24B", accentInk: "#FFCE6E", onAccent: "#201234", accent2: "#FF8FA3",
+      line: "244,238,228", lineA: ".16", shadow: "0 18px 40px rgba(0,0,0,.34)" },
+    { id: "dawn", label: "6:30", ampm: "am", cap: "first light",
+      bg: "#FBE7D0", surface: "#FFF7EC", text: "#33162C", muted: "#6E4A55",
+      accent: "#C2410C", accentInk: "#A8360A", onAccent: "#FFF7EC", accent2: "#B01B5B",
+      line: "51,22,44", lineA: ".18", shadow: "0 16px 34px rgba(51,22,44,.16)" },
+    { id: "morning", label: "8:00", ampm: "am", cap: "wide awake",
+      bg: "#F8F2E6", surface: "#FFFFFF", text: "#2A1030", muted: "#665069",
+      accent: "#6D1A9C", accentInk: "#5E1587", onAccent: "#FFFFFF", accent2: "#C0392B",
+      line: "42,16,48", lineA: ".16", shadow: "0 14px 30px rgba(42,16,48,.13)" }
+  ];
 
   function initDial() {
     var slider = document.getElementById("time");
     if (!slider) return;
     var root = document.documentElement,
         clock = document.getElementById("clock"),
+        capEl = document.getElementById("dialcap"),
         themeMeta = document.querySelector("meta[name=theme-color]");
 
-    function label(t){
-      var mins = Math.round(lerp(107, 480, t)), h = Math.floor(mins/60), m = mins % 60,
-          ampm = h < 12 ? "am" : "pm", h12 = h % 12; if (h12 === 0) h12 = 12;
-      return h12 + ":" + pad2(m) + '<span style="font-size:.62em"> ' + ampm + "</span>";
+    slider.min = 0; slider.max = STOPS.length - 1; slider.step = 1;
+
+    function apply(i) {
+      var s = STOPS[i], st = root.style;
+      st.setProperty("--bg", s.bg);
+      st.setProperty("--surface", s.surface);
+      st.setProperty("--text", s.text);
+      st.setProperty("--muted", s.muted);
+      st.setProperty("--accent", s.accent);
+      st.setProperty("--accent-ink", s.accentInk);
+      st.setProperty("--on-accent", s.onAccent);
+      st.setProperty("--accent2", s.accent2);
+      st.setProperty("--line", "rgba(" + s.line + "," + s.lineA + ")");
+      st.setProperty("--shadow", s.shadow);
+      if (clock) clock.innerHTML = s.label + '<span style="font-size:.62em"> ' + s.ampm + "</span>";
+      if (capEl) capEl.textContent = s.cap;
+      if (themeMeta) themeMeta.setAttribute("content", s.bg);
+      root.setAttribute("data-phase", s.id);
+      try { sessionStorage.setItem("ap_time", i); } catch (e) {}
     }
-    function apply(t){
-      var st = root.style;
-      st.setProperty("--bg", mix(NIGHT.bg, MORNING.bg, t));
-      st.setProperty("--surface", mix(NIGHT.surface, MORNING.surface, t));
-      st.setProperty("--text", mix(NIGHT.text, MORNING.text, t));
-      st.setProperty("--muted", mix(NIGHT.muted, MORNING.muted, t));
-      st.setProperty("--accent", mix(NIGHT.accent, MORNING.accent, t));
-      st.setProperty("--accent2", mix(NIGHT.accent2, MORNING.accent2, t));
-      st.setProperty("--line", mixLine(NIGHT.line, MORNING.line, t));
-      if (clock) clock.innerHTML = label(t);
-      if (themeMeta) themeMeta.setAttribute("content", mix(NIGHT.bg, MORNING.bg, t));
-      root.setAttribute("data-phase", t >= 0.55 ? "morning" : "night");
-      try { sessionStorage.setItem("ap_time", slider.value); } catch (e) {}
-    }
+
     var saved = null;
     try { saved = sessionStorage.getItem("ap_time"); } catch (e) {}
-    if (saved !== null) slider.value = saved;
-    slider.addEventListener("input", function(){ apply(slider.value / 100); });
-    apply(slider.value / 100);
+    var start = saved === null ? 0 : Math.max(0, Math.min(STOPS.length - 1, parseInt(saved, 10) || 0));
+    slider.value = start;
+    slider.addEventListener("input", function () { apply(parseInt(slider.value, 10)); });
+    apply(start);
   }
 
   document.addEventListener("DOMContentLoaded", function () {
