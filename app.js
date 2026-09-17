@@ -62,6 +62,26 @@
   ];
   window.AP_FLAVOURS = F;
 
+  /* ---------------- the wider range ---------------- */
+  var P = [
+    { key:"peanuts", type:"carton", name:"Peanuts", sub:"Three flavours · 145 g", price:99,
+      blurb:"The original. Roasted peanuts with 24 g of plant protein per 100 g, in Classic Sweet, Tamarind Chilli or Smoky Chipotle.",
+      link:"product.html", cta:"Pick a flavour" },
+    { key:"trail", type:"pouch", name:"Spicy-Sweet Trail Mix", sub:"80 g pouch", price:129,
+      bg:"#B4136B", acc:"#FFD21E", confetti:["peanut","chilli","splat","peanut","chilli"],
+      blurb:"Jaggery-chilli peanuts, roasted makhana and dried mango. Built to be passed around a table at 2 am.",
+      claims:[["plant","PLANT PROTEIN"],["fibre","HIGH FIBRE"],["bolt","ELECTROLYTES"]] },
+    { key:"nachos", type:"pouch", name:"Loaded Nachos", sub:"60 g pouch", price:99,
+      bg:"#C4520E", acc:"#FFD21E", confetti:["chilli","splat","peanut","chilli"],
+      blurb:"Baked corn chips with a loaded masala seasoning. Tastes like a street-side plate, without the oil slick.",
+      claims:[["flame","BOLD FLAVOUR"],["salt","BAKED, NOT FRIED"],["fibre","HIGH FIBRE"]] },
+    { key:"bites", type:"pouch", name:"Chocolate-Banana Bites", sub:"120 g pouch", price:149,
+      bg:"#4A2C1A", acc:"#FFD21E", confetti:["peanut","splat","peanut","splat"],
+      blurb:"Dense cocoa and banana bites with plant protein and no caffeine, for the nights that end on something sweet.",
+      claims:[["plant","PLANT PROTEIN"],["fibre","HIGH FIBRE"],["salt","NO CAFFEINE"]] }
+  ];
+  window.AP_PRODUCTS = P;
+
   /* ---------------- carton art ---------------- */
   function peanutSVG(w) {
     return '<svg viewBox="0 0 30 22" width="' + w + '" aria-hidden="true"><g transform="translate(15 11)">' +
@@ -152,7 +172,29 @@
     return '<div class="cart face-top" style="' + styleVars(f) + '">' + confetti(f) +
       '<div><img src="' + LOGO + '" alt="" /><p>GOOD SNACKS<br>BETTER TOMORROWS</p></div></div>';
   }
-  window.AP_FACE = { front: front, back: back, side: side, top: top };
+  function pouchClaims(list){
+    var h = "";
+    for (var i=0;i<list.length;i++) h += "<span>" + ICON[list[i][0]] + "<b style='font-weight:700'>" + list[i][1] + "</b></span>";
+    return h;
+  }
+  function pouch(p) {
+    return '<div class="cart face-pouch" style="--fbg:' + p.bg + ';--facc:' + p.acc + ';--facc2:' + p.bg + ';">' + confetti(p) +
+      '<div class="crimp"></div>' +
+      '<div class="plabel">' +
+        '<img class="lg" src="' + LOGO + '" alt="" />' +
+        '<div class="pname">' + p.name + '</div>' +
+        '<div class="psub">' + p.sub + '</div>' +
+        '<div class="pclaims">' + pouchClaims(p.claims) + '</div>' +
+      '</div>' +
+      '<div class="pfoot">GOOD SNACKS · BETTER TOMORROWS</div>' +
+      '<div class="crimp b"></div></div>';
+  }
+  function productArt(p) {
+    if (p.type === "carton") return front(F[1]);
+    return pouch(p);
+  }
+
+  window.AP_FACE = { front: front, back: back, side: side, top: top, pouch: pouch };
 
   /* ---------------- cart (shared across pages) ---------------- */
   var KEY = "ap_cart_v1";
@@ -235,6 +277,36 @@
     }
   }
 
+  function initRange() {
+    var box = document.getElementById("range");
+    if (!box) return;
+    var h = "";
+    for (var i = 0; i < P.length; i++) {
+      var p = P[i];
+      h += '<article class="sku" data-key="' + p.key + '">' +
+        '<div class="cartbox">' + productArt(p) + '</div>' +
+        "<h3>" + p.name + "</h3>" +
+        '<p class="small" style="margin:-4px 0 0">' + p.sub + "</p>" +
+        "<p>" + p.blurb + "</p>" +
+        '<div class="price">&#8377;' + p.price + " " +
+        (p.link
+          ? '<a class="add" href="' + p.link + '">' + p.cta + "</a>"
+          : '<button class="add" data-add="' + p.key + '">Add to order</button>') +
+        "</div></article>";
+    }
+    box.innerHTML = h;
+    var adds = box.querySelectorAll("button.add");
+    for (var a = 0; a < adds.length; a++) {
+      adds[a].addEventListener("click", function () {
+        var c = readCart(), k = this.getAttribute("data-add");
+        c[k] = (c[k] || 0) + 1; writeCart(c);
+        var btn = this; btn.textContent = "Added \u2713";
+        setTimeout(function () { btn.textContent = "Add to order"; }, 1100);
+        if (!reduce) { var card = btn.closest(".sku"); card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake"); }
+      });
+    }
+  }
+
   /* ---------------- page: pack explorer ---------------- */
   var NOTE = {
     front: "The front does one job: make someone want it. Flavour name, the window on the peanuts, and the three claims small at the bottom where they belong.",
@@ -274,6 +346,9 @@
     { key: "sweet", name: "Classic Sweet", sub: "145 g carton · sweet, crunchy, the crowd-pleaser", price: 99, art: "sweet" },
     { key: "tam", name: "Tamarind Chilli", sub: "145 g carton · sour, hot, the hero flavour", price: 99, art: "tam" },
     { key: "smoky", name: "Smoky Chipotle", sub: "145 g carton · dry smoke, lowest sugar", price: 99, art: "smoky" },
+    { key: "trail", name: "Spicy-Sweet Trail Mix", sub: "80 g pouch · jaggery chilli, makhana, dried mango", price: 129, art: "pouch:trail" },
+    { key: "nachos", name: "Loaded Nachos", sub: "60 g pouch · baked corn chips, loaded masala", price: 99, art: "pouch:nachos" },
+    { key: "bites", name: "Chocolate-Banana Bites", sub: "120 g pouch · cocoa, banana, plant protein, no caffeine", price: 149, art: "pouch:bites" },
     { key: "trio", name: "The Trio", sub: "One of each flavour. The easiest way to find your one.", price: 279, art: "tam" },
     { key: "party", name: "House Party Pack", sub: "Six cartons, mixed flavours. Stock the shelf before the weekend.", price: 499, art: "smoky" }
   ];
@@ -284,10 +359,15 @@
     if (!list) return;
     var cart = readCart(), h = "";
     for (var i = 0; i < BUNDLES.length; i++) {
-      var b = BUNDLES[i], f = null;
-      for (var j = 0; j < F.length; j++) if (F[j].key === b.art) f = F[j];
+      var b = BUNDLES[i], art = "";
+      if (b.art.indexOf("pouch:") === 0) {
+        var pk = b.art.split(":")[1];
+        for (var m = 0; m < P.length; m++) if (P[m].key === pk) art = pouch(P[m]);
+      } else {
+        for (var j = 0; j < F.length; j++) if (F[j].key === b.art) art = front(F[j]);
+      }
       h += '<div class="pickrow" data-key="' + b.key + '">' +
-        '<div class="cartbox">' + front(f) + "</div>" +
+        '<div class="cartbox">' + art + "</div>" +
         "<div><h3>" + b.name + "</h3><p>" + b.sub + "</p><p style='margin-top:6px;font-family:var(--display);font-weight:700;color:var(--text)'>&#8377;" + b.price + "</p></div>" +
         '<div class="qty"><button data-step="-1" aria-label="Remove one ' + b.name + '">–</button>' +
         '<output data-q="' + b.key + '">' + (cart[b.key] || 0) + "</output>" +
@@ -374,7 +454,49 @@
     paintCount();
   }
 
+  /* ---------------- night → morning dial ---------------- */
+  var NIGHT = { bg:[26,11,36], surface:[42,16,56], text:[247,239,221], muted:[192,166,207], accent:[255,210,30], accent2:[255,90,95], line:[247,239,221] };
+  var MORNING = { bg:[247,239,221], surface:[255,255,255], text:[42,11,51], muted:[110,85,120], accent:[196,138,0], accent2:[200,40,45], line:[42,11,51] };
+
+  function lerp(a,b,t){ return a + (b-a)*t; }
+  function mix(a,b,t){ return "rgb(" + Math.round(lerp(a[0],b[0],t)) + "," + Math.round(lerp(a[1],b[1],t)) + "," + Math.round(lerp(a[2],b[2],t)) + ")"; }
+  function mixLine(a,b,t){ return "rgba(" + Math.round(lerp(a[0],b[0],t)) + "," + Math.round(lerp(a[1],b[1],t)) + "," + Math.round(lerp(a[2],b[2],t)) + ",.18)"; }
+  function pad2(n){ return n < 10 ? "0" + n : "" + n; }
+
+  function initDial() {
+    var slider = document.getElementById("time");
+    if (!slider) return;
+    var root = document.documentElement,
+        clock = document.getElementById("clock"),
+        themeMeta = document.querySelector("meta[name=theme-color]");
+
+    function label(t){
+      var mins = Math.round(lerp(107, 480, t)), h = Math.floor(mins/60), m = mins % 60,
+          ampm = h < 12 ? "am" : "pm", h12 = h % 12; if (h12 === 0) h12 = 12;
+      return h12 + ":" + pad2(m) + '<span style="font-size:.62em"> ' + ampm + "</span>";
+    }
+    function apply(t){
+      var st = root.style;
+      st.setProperty("--bg", mix(NIGHT.bg, MORNING.bg, t));
+      st.setProperty("--surface", mix(NIGHT.surface, MORNING.surface, t));
+      st.setProperty("--text", mix(NIGHT.text, MORNING.text, t));
+      st.setProperty("--muted", mix(NIGHT.muted, MORNING.muted, t));
+      st.setProperty("--accent", mix(NIGHT.accent, MORNING.accent, t));
+      st.setProperty("--accent2", mix(NIGHT.accent2, MORNING.accent2, t));
+      st.setProperty("--line", mixLine(NIGHT.line, MORNING.line, t));
+      if (clock) clock.innerHTML = label(t);
+      if (themeMeta) themeMeta.setAttribute("content", mix(NIGHT.bg, MORNING.bg, t));
+      root.setAttribute("data-phase", t >= 0.55 ? "morning" : "night");
+      try { sessionStorage.setItem("ap_time", slider.value); } catch (e) {}
+    }
+    var saved = null;
+    try { saved = sessionStorage.getItem("ap_time"); } catch (e) {}
+    if (saved !== null) slider.value = saved;
+    slider.addEventListener("input", function(){ apply(slider.value / 100); });
+    apply(slider.value / 100);
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
-    initBits(); initSkus(); initExplorer(); initOrder();
+    initBits(); initRange(); initSkus(); initExplorer(); initOrder(); initDial();
   });
 })();

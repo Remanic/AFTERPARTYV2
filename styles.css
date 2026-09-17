@@ -124,6 +124,40 @@ nav a[aria-current=page]{color:var(--text); border-bottom-color:var(--accent)}
 .face-top img{width:38%; display:block; margin:0 auto 2cqw}
 .face-top p{margin:0; font-size:4cqw; font-weight:800}
 
+/* ---------- pouch ---------- */
+.face-pouch{aspect-ratio:105/140; padding:0 4cqw; display:flex; flex-direction:column; align-items:center; text-align:center}
+.crimp{width:calc(100% + 8cqw); height:7cqw; margin-inline:-4cqw; flex:none;
+  background:repeating-linear-gradient(90deg, rgba(0,0,0,.45) 0 3cqw, rgba(255,255,255,.14) 3cqw 6cqw)}
+.crimp.b{margin-top:auto}
+.plabel{background:#F7EFDD; color:var(--ink); width:88%; margin-top:7cqw; border-radius:8cqw 8cqw 3cqw 3cqw; padding:3cqw 3cqw 3.5cqw}
+.plabel .lg{width:62%; margin:0 auto .5cqw; display:block}
+.pname{font-size:5.4cqw; font-weight:800; letter-spacing:-.035em; line-height:1.05; color:var(--facc2, #2A0B33)}
+.psub{font-size:2.6cqw; font-weight:600; letter-spacing:.08em; color:#5A4A5E; margin-top:.8cqw}
+.pclaims{display:flex; justify-content:space-between; gap:1cqw; margin-top:2.4cqw; padding-top:1.8cqw; border-top:.3cqw solid rgba(42,11,51,.18)}
+.pclaims span{display:flex; flex-direction:column; align-items:center; gap:.8cqw; width:32%; font-size:1.85cqw; font-weight:700; line-height:1.2; color:var(--ink)}
+.pclaims svg{width:5.2cqw; height:5.2cqw}
+.pfoot{font-size:2.4cqw; font-weight:800; letter-spacing:.1em; color:var(--accent); padding:3cqw 0}
+
+/* ---------- retailer buttons ---------- */
+.retailers{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-top:26px}
+.retailer{display:flex; flex-direction:column; gap:10px; text-decoration:none; padding:18px; border-radius:16px;
+  border:1px solid var(--line); background:color-mix(in srgb, var(--bg) 55%, transparent);
+  transition:transform .15s ease, border-color .15s ease, background-color .15s ease}
+.retailer:hover{transform:translateY(-3px); border-color:var(--rc); background:color-mix(in srgb, var(--rc) 12%, transparent)}
+.rlogo{display:flex; align-items:center; justify-content:center; height:46px; border-radius:11px; background:var(--rc); color:var(--rt);
+  font-family:var(--display); font-weight:800; font-size:1.02rem; letter-spacing:-.04em; gap:5px}
+.rlogo svg{width:17px; height:17px}
+.retailer b{font-family:var(--display); font-weight:700; font-size:.86rem}
+.retailer span{font-family:var(--display); font-size:.72rem; color:var(--muted)}
+.retailer .go{font-family:var(--display); font-weight:700; font-size:.74rem; color:var(--rc)}
+
+/* ---------- dial ---------- */
+.dial{display:flex; align-items:center; gap:11px; flex:none}
+.clock{font-family:var(--display); font-weight:800; font-size:1rem; min-width:5.2ch; text-align:right; font-variant-numeric:tabular-nums}
+.dialtrack{width:clamp(84px,11vw,140px); display:flex; flex-direction:column; gap:3px}
+.dialtrack .cap{font-family:var(--display); font-size:.6rem; font-weight:600; letter-spacing:.06em; color:var(--muted); display:flex; justify-content:space-between}
+@media (max-width:640px){ .dialtrack{width:72px} .clock{font-size:.86rem} .mark img{height:30px} .cartlink{padding:8px 13px; font-size:.76rem} }
+
 /* ---------- hero ---------- */
 .hero{padding-top:clamp(34px,5vw,60px); padding-bottom:clamp(44px,6vw,84px); position:relative; overflow:hidden}
 .hero::after{content:""; position:absolute; inset:auto -30% -62% 42%; height:520px; border-radius:50%;

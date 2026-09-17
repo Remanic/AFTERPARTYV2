@@ -29,7 +29,9 @@ Navigation between pages is plain relative links, so it works the same locally a
 ## Things to set before you go live
 
 1. **WhatsApp number.** `app.js`, in `initOrder()` — replace `910000000000` in the `wa.me` link with your real number in international format (91 + 10 digits).
-2. **Price.** Currently ₹99 per 145 g carton, ₹279 for the Trio, ₹499 for the House Party Pack, free delivery over ₹499. All in the `BUNDLES` array and `FREE_AT` in `app.js`.
+2. **Prices.** Placeholders until you set them: peanut carton ₹99 (145 g), Spicy-Sweet Trail Mix ₹129 (80 g), Loaded Nachos ₹99 (60 g), Chocolate-Banana Bites ₹149 (120 g), The Trio ₹279, House Party Pack ₹499, free delivery over ₹499. Products live in the `P` array, order lines in `BUNDLES`, and the free-delivery threshold in `FREE_AT` — all in `app.js`.
+
+5. **Retailer links.** The four buttons on the landing and order pages link to each platform's homepage. Swap in your actual product or search URLs once the listings are live.
 3. **Delivery promise.** "Six metros, two to four days" appears on `order.html`. Make it true or change it.
 4. **Stockist claims.** The landing and order pages say you're on Instamart, Blinkit, BigBasket and Zepto. Only leave those up once the listings are actually live.
 
