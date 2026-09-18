@@ -166,13 +166,9 @@ nav a[aria-current=page]{color:var(--text); border-bottom-color:var(--accent-ink
 
 .vtaste{font-size:.9rem; color:var(--text); border-left:2px solid var(--accent-ink); padding-left:12px; margin:0}
 
-/* ---------- flavour chips inside a product card ---------- */
-.fchips{display:flex; flex-wrap:wrap; gap:6px; margin-top:2px}
-.fchip{font-family:var(--display); font-weight:600; font-size:.74rem; padding:6px 12px; border-radius:99px; cursor:pointer;
-  border:1px solid var(--line); background:transparent; color:var(--muted);
-  transition:background-color .15s ease, color .15s ease, border-color .15s ease}
-.fchip:hover{color:var(--text); border-color:var(--accent-ink)}
-.fchip[aria-pressed=true]{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
+/* ---------- category label on a product card ---------- */
+.sku .cat{font-family:var(--display); font-weight:700; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--accent-ink); margin:2px 0 -6px}
 
 /* ---------- retailer buttons ---------- */
 .retailers{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-top:26px}
@@ -225,7 +221,7 @@ h1{font-size:clamp(38px,6.6vw,76px)}
 @media (max-width:620px){ .timeline{grid-template-columns:1fr} .timeline div{border-top:1px solid var(--line); padding-top:12px} .timeline div:first-child{border-top:0} }
 
 /* ---------- sku grid ---------- */
-.skus{display:grid; grid-template-columns:repeat(auto-fit,minmax(255px,1fr)); gap:20px}
+.skus{display:grid; grid-template-columns:repeat(auto-fit,minmax(248px,1fr)); gap:20px}
 .sku{border:1px solid var(--line); border-radius:var(--r); padding:20px; display:flex; flex-direction:column; gap:10px;
      background:var(--card)}
 .sku{transition:border-color .2s ease, transform .2s ease}

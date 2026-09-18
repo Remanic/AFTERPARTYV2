@@ -195,46 +195,25 @@
     var boxes = document.querySelectorAll("[data-range]");
     if (!boxes.length) return;
 
-    function card(p, idx) {
-      var chips = "";
-      for (var i = 0; i < p.variants.length; i++) {
-        chips += '<button class="fchip" data-p="' + idx + '" data-v="' + i + '" aria-pressed="' + (i === 0) + '">' + p.variants[i].flavour + "</button>";
-      }
-      return '<article class="sku" data-p="' + idx + '">' +
-        '<div class="cartbox" data-art="' + idx + '">' + pack(p.variants[0]) + "</div>" +
-        "<h3>" + p.name + "</h3>" +
-        '<p class="small" style="margin:-4px 0 0">' + p.size + " · " + p.variants.length + " flavours</p>" +
-        "<p>" + p.blurb + "</p>" +
-        '<p class="vtaste" data-vt="' + idx + '">' + p.variants[0].taste + "</p>" +
-        '<div class="fchips" role="group" aria-label="' + p.name + ' flavours">' + chips + "</div>" +
-        '<div class="price">&#8377;' + p.price + '<button class="add" data-p="' + idx + '">Add to order</button></div></article>';
+    function card(sku, full) {
+      return '<article class="sku" data-key="' + sku.k + '">' +
+        '<div class="cartbox">' + pack(sku) + "</div>" +
+        '<p class="cat">' + sku.cat + "</p>" +
+        "<h3>" + sku.flavour + "</h3>" +
+        "<p>" + sku.taste + "</p>" +
+        (full ? '<p class="vtaste">' + sku.func + "</p>" : "") +
+        '<div class="price">&#8377;' + sku.price + ' <small>' + sku.size + ' box</small>' +
+        '<button class="add" data-add="' + sku.k + '">Add to order</button></div></article>';
     }
 
     for (var b = 0; b < boxes.length; b++) {
       var full = boxes[b].getAttribute("data-range") === "full", h = "";
-      for (var i = 0; i < P.length; i++) h += card(P[i], i);
+      for (var i = 0; i < SKU.length; i++) h += card(SKU[i], full);
       boxes[b].innerHTML = h;
-      wire(boxes[b], full);
-    }
-
-    function wire(box, isFull) {
-      var chosen = {};
-      box.addEventListener("click", function (e) {
-        var chip = e.target.closest(".fchip");
-        if (chip) {
-          var pi = +chip.getAttribute("data-p"), vi = +chip.getAttribute("data-v"), p = P[pi], card2 = chip.closest(".sku");
-          chosen[pi] = vi;
-          card2.querySelector('[data-art="' + pi + '"]').innerHTML = pack(p.variants[vi]);
-          var vt = card2.querySelector('[data-vt="' + pi + '"]');
-          if (vt) vt.textContent = isFull ? p.variants[vi].func : p.variants[vi].taste;
-          var sibs = card2.querySelectorAll(".fchip");
-          for (var i = 0; i < sibs.length; i++) sibs[i].setAttribute("aria-pressed", i === vi);
-          return;
-        }
+      boxes[b].addEventListener("click", function (e) {
         var btn = e.target.closest("button.add");
         if (!btn) return;
-        var pidx = +btn.getAttribute("data-p"), prod = P[pidx];
-        var c = readCart(), key = prod.variants[chosen[pidx] || 0].k;
+        var c = readCart(), key = btn.getAttribute("data-add");
         c[key] = (c[key] || 0) + 1;
         writeCart(c);
         btn.textContent = "Added \u2713";
