@@ -195,43 +195,18 @@
     var boxes = document.querySelectorAll("[data-range]");
     if (!boxes.length) return;
 
-    /* black or white label, whichever the flavour colour can carry */
-    function inkOn(hex) {
-      var h = hex.replace("#", "");
-      var r = parseInt(h.substr(0,2),16)/255, g2 = parseInt(h.substr(2,2),16)/255, b = parseInt(h.substr(4,2),16)/255;
-      var f = function (c) { return c <= 0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4); };
-      var L = 0.2126*f(r) + 0.7152*f(g2) + 0.0722*f(b);
-      return L > 0.42 ? "#1A1A1A" : "#FFFFFF";
-    }
-
-    function chipHTML(p, idx, i, on) {
-      var v = p.variants[i];
-      return '<button class="fchip" data-p="' + idx + '" data-v="' + i + '" aria-pressed="' + on + '"' +
-        ' style="--fc:' + v.bg + ';--fi:' + inkOn(v.bg) + '">' +
-        '<i></i>' + v.flavour + "</button>";
-    }
-
-    function stageHTML(p, idx, sel) {
-      var other = (sel + 1) % p.variants.length;
-      return '<div class="packstage">' +
-        '<button class="ghost" data-ghost="' + idx + '" aria-label="Switch to ' + p.variants[other].flavour + '">' +
-          pack(p.variants[other]) + '<span class="tapme">' + p.variants[other].flavour + '</span>' +
-        "</button>" +
-        '<div class="main" data-art="' + idx + '">' + pack(p.variants[sel]) + "</div>" +
-      "</div>";
-    }
-
     function card(p, idx) {
       var chips = "";
-      for (var i = 0; i < p.variants.length; i++) chips += chipHTML(p, idx, i, i === 0);
+      for (var i = 0; i < p.variants.length; i++) {
+        chips += '<button class="fchip" data-p="' + idx + '" data-v="' + i + '" aria-pressed="' + (i === 0) + '">' + p.variants[i].flavour + "</button>";
+      }
       return '<article class="sku" data-p="' + idx + '">' +
-        stageHTML(p, idx, 0) +
+        '<div class="cartbox" data-art="' + idx + '">' + pack(p.variants[0]) + "</div>" +
         "<h3>" + p.name + "</h3>" +
         '<p class="small" style="margin:-4px 0 0">' + p.size + " · " + p.variants.length + " flavours</p>" +
         "<p>" + p.blurb + "</p>" +
         '<p class="vtaste" data-vt="' + idx + '">' + p.variants[0].taste + "</p>" +
-        '<div class="fpick"><span class="flabel">Pick your flavour</span>' +
-          '<div class="fchips" role="group" aria-label="' + p.name + ' flavours">' + chips + "</div></div>" +
+        '<div class="fchips" role="group" aria-label="' + p.name + ' flavours">' + chips + "</div>" +
         '<div class="price">&#8377;' + p.price + '<button class="add" data-p="' + idx + '">Add to order</button></div></article>';
     }
 
@@ -244,30 +219,16 @@
 
     function wire(box, isFull) {
       var chosen = {};
-
-      function select(pi, vi, card2) {
-        var p = P[pi];
-        chosen[pi] = vi;
-        var stage = card2.querySelector(".packstage");
-        stage.outerHTML = stageHTML(p, pi, vi);
-        var main = card2.querySelector(".packstage .main");
-        if (!reduce) { main.classList.remove("pop"); void main.offsetWidth; main.classList.add("pop"); }
-        var vt = card2.querySelector('[data-vt="' + pi + '"]');
-        if (vt) vt.textContent = isFull ? p.variants[vi].func : p.variants[vi].taste;
-        var sibs = card2.querySelectorAll(".fchip");
-        for (var i = 0; i < sibs.length; i++) sibs[i].setAttribute("aria-pressed", i === vi);
-      }
-
       box.addEventListener("click", function (e) {
-        var ghost = e.target.closest(".ghost");
-        if (ghost) {
-          var gi = +ghost.getAttribute("data-ghost"), cardG = ghost.closest(".sku");
-          select(gi, ((chosen[gi] || 0) + 1) % P[gi].variants.length, cardG);
-          return;
-        }
         var chip = e.target.closest(".fchip");
         if (chip) {
-          select(+chip.getAttribute("data-p"), +chip.getAttribute("data-v"), chip.closest(".sku"));
+          var pi = +chip.getAttribute("data-p"), vi = +chip.getAttribute("data-v"), p = P[pi], card2 = chip.closest(".sku");
+          chosen[pi] = vi;
+          card2.querySelector('[data-art="' + pi + '"]').innerHTML = pack(p.variants[vi]);
+          var vt = card2.querySelector('[data-vt="' + pi + '"]');
+          if (vt) vt.textContent = isFull ? p.variants[vi].func : p.variants[vi].taste;
+          var sibs = card2.querySelectorAll(".fchip");
+          for (var i = 0; i < sibs.length; i++) sibs[i].setAttribute("aria-pressed", i === vi);
           return;
         }
         var btn = e.target.closest("button.add");

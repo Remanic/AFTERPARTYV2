@@ -166,49 +166,13 @@ nav a[aria-current=page]{color:var(--text); border-bottom-color:var(--accent-ink
 
 .vtaste{font-size:.9rem; color:var(--text); border-left:2px solid var(--accent-ink); padding-left:12px; margin:0}
 
-/* ---------- flavour picker inside a product card ---------- */
-.packstage{position:relative; display:flex; justify-content:center; align-items:flex-start; padding:6px 0 4px; min-height:1px}
-.packstage .main{width:76%; position:relative; z-index:2}
-.packstage .main .cart{box-shadow:var(--shadow)}
-.packstage .ghost{
-  position:absolute; right:0; top:11%; width:50%; z-index:1; padding:0; border:0; background:transparent; cursor:pointer;
-  transform:rotate(9deg) translateX(10%); opacity:.66; filter:saturate(.92);
-  transition:transform .28s cubic-bezier(.2,.8,.3,1), opacity .2s ease;
-}
-.packstage .ghost:hover, .packstage .ghost:focus-visible{opacity:1; transform:rotate(6deg) translate(4%,-8px)}
-.packstage .ghost .tapme{
-  position:absolute; left:50%; bottom:-11px; transform:translateX(-50%); white-space:nowrap;
-  font-family:var(--display); font-weight:700; font-size:.66rem; padding:5px 10px; border-radius:99px;
-  background:var(--text); color:var(--bg); box-shadow:var(--shadow);
-}
-.packstage .ghost::after{
-  content:"↺"; position:absolute; top:-6px; left:-6px; width:24px; height:24px; border-radius:50%;
-  display:grid; place-items:center; font-size:.8rem; font-weight:700;
-  background:var(--accent); color:var(--on-accent); box-shadow:var(--shadow);
-}
-.main.pop{animation:pop .42s cubic-bezier(.2,.9,.3,1)}
-@keyframes pop{0%{transform:scale(.9) rotate(-3deg); opacity:.4}60%{transform:scale(1.03) rotate(1deg); opacity:1}100%{transform:none}}
-
-.fpick{border-top:1px dashed var(--line); padding-top:12px; margin-top:2px}
-.flabel{display:block; font-family:var(--display); font-weight:700; font-size:.68rem; letter-spacing:.08em;
-  text-transform:uppercase; color:var(--muted); margin-bottom:8px}
-.fchips{display:flex; flex-wrap:wrap; gap:8px}
-.fchip{
-  display:inline-flex; align-items:center; gap:8px; cursor:pointer;
-  font-family:var(--display); font-weight:700; font-size:.78rem; padding:9px 14px; border-radius:99px;
-  border:1.5px solid var(--line); background:transparent; color:var(--text);
-  transition:border-color .18s ease, background-color .18s ease, color .18s ease, transform .12s ease;
-}
-.fchip i{width:13px; height:13px; border-radius:50%; background:var(--fc); flex:none;
-  box-shadow:0 0 0 2px color-mix(in srgb, var(--fc) 35%, transparent)}
-.fchip:hover{transform:translateY(-1px); border-color:var(--fc)}
-.fchip[aria-pressed=true]{background:var(--fc); border-color:var(--fc); color:var(--fi)}
-.fchip[aria-pressed=true] i{background:var(--fi); box-shadow:none}
-
-@media (max-width:520px){
-  .packstage .ghost{width:44%; top:14%}
-  .packstage .ghost .tapme{font-size:.6rem; padding:4px 8px}
-}
+/* ---------- flavour chips inside a product card ---------- */
+.fchips{display:flex; flex-wrap:wrap; gap:6px; margin-top:2px}
+.fchip{font-family:var(--display); font-weight:600; font-size:.74rem; padding:6px 12px; border-radius:99px; cursor:pointer;
+  border:1px solid var(--line); background:transparent; color:var(--muted);
+  transition:background-color .15s ease, color .15s ease, border-color .15s ease}
+.fchip:hover{color:var(--text); border-color:var(--accent-ink)}
+.fchip[aria-pressed=true]{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
 
 /* ---------- retailer buttons ---------- */
 .retailers{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-top:26px}
