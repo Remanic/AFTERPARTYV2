@@ -29,11 +29,11 @@ Navigation between pages is plain relative links, so it works the same locally a
 ## Things to set before you go live
 
 1. **WhatsApp number.** `app.js`, in `initOrder()` — replace `910000000000` in the `wa.me` link with your real number in international format (91 + 10 digits).
-2. **Prices.** Placeholders until you set them: Peanuts ₹99 (145 g carton, 3 flavours), Chips ₹59 (60 g, Peri Peri / Barbeque), Makhana ₹99 (75 g, Jalapeño / Tandoori Tikka), Trail Mix ₹129 (80 g), Loaded Nachos ₹69 (60 g), Chocolate-Banana Bites ₹149 (120 g), Peanut Trio ₹279, House Party Pack ₹499, free delivery over ₹499. Products live in the `P` array, bundles in `BUNDLES`, the threshold in `FREE_AT` — all in `app.js`.
+2. **Prices** follow the pricing table in the final submission: Chips ₹149, Peanuts ₹159, Makhana ₹199, all 145 g boxes. Bundles are ours: The Trio ₹449, House Party Pack ₹899, free delivery over ₹499. SKUs live in the `SKU` array, families in `P`, bundles in `BUNDLES`, the threshold in `FREE_AT` — all in `app.js`.
 
-### Adding a product or a flavour
+### The product model
 
-`P` in `app.js` is the single source. A product with a `variants` array gets flavour chips on its card and one order line per flavour; a product without variants is a single SKU. Add an entry there and it appears on the landing page, the range page and the order page at once — no HTML to touch.
+`SKU` in `app.js` holds the six lines — three categories (Peanuts, Makhana, Chips) with two flavours each, matching the product architecture in the submission. `P` groups them into the three families shown on the cards. Add or edit an entry and it flows through to the landing page, the range page, the order page and the delivery-app mock at once — no HTML to touch.
 
 5. **Retailer links.** The four buttons on the landing and order pages link to each platform's homepage. Swap in your actual product or search URLs once the listings are live.
 3. **Delivery promise.** "Six metros, two to four days" appears on `order.html`. Make it true or change it.

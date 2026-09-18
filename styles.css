@@ -164,6 +164,8 @@ nav a[aria-current=page]{color:var(--text); border-bottom-color:var(--accent-ink
 .pclaims svg{width:5.2cqw; height:5.2cqw}
 .pfoot{font-size:2.4cqw; font-weight:800; letter-spacing:.1em; color:#FFD21E; padding:3cqw 0}
 
+.vtaste{font-size:.9rem; color:var(--text); border-left:2px solid var(--accent-ink); padding-left:12px; margin:0}
+
 /* ---------- flavour chips inside a product card ---------- */
 .fchips{display:flex; flex-wrap:wrap; gap:6px; margin-top:2px}
 .fchip{font-family:var(--display); font-weight:600; font-size:.74rem; padding:6px 12px; border-radius:99px; cursor:pointer;
