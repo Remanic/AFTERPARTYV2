@@ -156,6 +156,7 @@ nav a[aria-current=page]{color:var(--text); border-bottom-color:var(--accent-ink
 .crimp.b{margin-top:auto}
 .plabel{background:#F7EFDD; color:var(--ink); width:88%; margin-top:7cqw; border-radius:8cqw 8cqw 3cqw 3cqw; padding:3cqw 3cqw 3.5cqw}
 .plabel .lg{width:62%; margin:0 auto .5cqw; display:block}
+.pkind{font-size:2.5cqw; font-weight:700; letter-spacing:.14em; color:#7A6270; margin-top:.4cqw}
 .pname{font-size:5.4cqw; font-weight:800; letter-spacing:-.035em; line-height:1.05; color:var(--facc2, #2A0B33)}
 .psub{font-size:2.6cqw; font-weight:600; letter-spacing:.08em; color:#5A4A5E; margin-top:.8cqw}
 .pclaims{display:flex; justify-content:space-between; gap:1cqw; margin-top:2.4cqw; padding-top:1.8cqw; border-top:.3cqw solid rgba(42,11,51,.18)}
@@ -163,14 +164,24 @@ nav a[aria-current=page]{color:var(--text); border-bottom-color:var(--accent-ink
 .pclaims svg{width:5.2cqw; height:5.2cqw}
 .pfoot{font-size:2.4cqw; font-weight:800; letter-spacing:.1em; color:#FFD21E; padding:3cqw 0}
 
+/* ---------- flavour chips inside a product card ---------- */
+.fchips{display:flex; flex-wrap:wrap; gap:6px; margin-top:2px}
+.fchip{font-family:var(--display); font-weight:600; font-size:.74rem; padding:6px 12px; border-radius:99px; cursor:pointer;
+  border:1px solid var(--line); background:transparent; color:var(--muted);
+  transition:background-color .15s ease, color .15s ease, border-color .15s ease}
+.fchip:hover{color:var(--text); border-color:var(--accent-ink)}
+.fchip[aria-pressed=true]{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
+
 /* ---------- retailer buttons ---------- */
 .retailers{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-top:26px}
 .retailer{display:flex; flex-direction:column; gap:10px; text-decoration:none; padding:18px; border-radius:16px;
   border:1px solid var(--line); background:var(--card);
   transition:transform .15s ease, border-color .15s ease, background-color .15s ease}
-.retailer:hover{transform:translateY(-3px); border-color:var(--rc); background:color-mix(in srgb, var(--rc) 12%, transparent)}
-.rlogo{display:flex; align-items:center; justify-content:center; height:46px; border-radius:11px; background:var(--rc); color:var(--rt);
-  font-family:var(--display); font-weight:800; font-size:1.02rem; letter-spacing:-.04em; gap:5px}
+.retailer:hover{transform:translateY(-3px); border-color:var(--accent-ink); background:color-mix(in srgb, var(--accent-ink) 10%, var(--card))}
+.rlogo{display:flex; align-items:center; justify-content:center; height:48px; border-radius:12px;
+  background:var(--text); color:var(--bg);
+  font-family:var(--display); font-weight:800; font-size:1.04rem; letter-spacing:-.04em; gap:6px;
+  transition:background-color .45s ease, color .45s ease}
 .rlogo svg{width:17px; height:17px}
 .retailer b{font-family:var(--display); font-weight:700; font-size:.86rem}
 .retailer span{font-family:var(--display); font-size:.72rem; color:var(--muted)}
@@ -285,11 +296,13 @@ input[type=range]::-moz-range-thumb{width:20px; height:20px; border-radius:50%; 
 .ordergrid{display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr); gap:clamp(24px,4vw,46px); align-items:start}
 @media (max-width:900px){ .ordergrid{grid-template-columns:1fr} }
 .pick{display:grid; gap:14px}
-.pickrow{display:grid; grid-template-columns:78px minmax(0,1fr) auto; gap:16px; align-items:center;
+.pickrow{display:grid; grid-template-columns:72px minmax(0,1fr) auto; gap:16px; align-items:center;
   border:1px solid var(--line); border-radius:var(--r); padding:16px;
   background:var(--card)}
 .pickrow h3{font-size:1.06rem; margin-bottom:3px}
 .pickrow p{margin:0; font-size:.85rem; color:var(--muted); line-height:1.45}
+.pickrow .rowprice{margin-top:6px; font-family:var(--display); font-weight:800; color:var(--text)}
+.pickrow.bundle{border-color:color-mix(in srgb, var(--accent-ink) 45%, var(--line))}
 .qty{display:flex; align-items:center; gap:4px; border:1px solid var(--line); border-radius:99px; padding:4px}
 .qty button{width:30px; height:30px; border-radius:50%; border:0; cursor:pointer; background:transparent; color:var(--text);
   font-family:var(--display); font-weight:800; font-size:1rem; line-height:1}

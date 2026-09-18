@@ -63,24 +63,67 @@
   window.AP_FLAVOURS = F;
 
   /* ---------------- the wider range ---------------- */
+  /* Each entry is a product. Products with `variants` carry flavours, which are a
+     second-level choice inside the card — never the headline. */
   var P = [
-    { key:"peanuts", type:"carton", name:"Peanuts", sub:"Three flavours · 145 g", price:99,
-      blurb:"The original. Roasted peanuts with 24 g of plant protein per 100 g, in Classic Sweet, Tamarind Chilli or Smoky Chipotle.",
-      link:"product.html", cta:"Pick a flavour" },
-    { key:"trail", type:"pouch", name:"Spicy-Sweet Trail Mix", sub:"80 g pouch", price:129,
+    { key:"peanuts", type:"carton", name:"Peanuts", size:"145 g carton", price:99,
+      blurb:"The original. Roasted peanuts with 24 g of plant protein per 100 g.",
+      variants:[
+        { k:"peanuts-sweet", name:"Classic Sweet", flavour:"sweet" },
+        { k:"peanuts-tam",   name:"Tamarind Chilli", flavour:"tam" },
+        { k:"peanuts-smoky", name:"Smoky Chipotle", flavour:"smoky" }
+      ] },
+
+    { key:"chips", type:"pouch", name:"Chips", size:"60 g pouch", price:59,
+      blurb:"Baked, not fried, and seasoned hard enough that nobody asks what else is in them.",
+      claims:[["flame","BOLD FLAVOUR"],["salt","BAKED, NOT FRIED"],["fibre","HIGH FIBRE"]],
+      variants:[
+        { k:"chips-peri", name:"Peri Peri",  bg:"#C1121F", acc:"#FFD21E", confetti:["chilli","splat","chilli","peanut"] },
+        { k:"chips-bbq",  name:"Barbeque",   bg:"#7A3B12", acc:"#FFD21E", confetti:["splat","chilli","splat","peanut"] }
+      ] },
+
+    { key:"makhana", type:"pouch", name:"Makhana", size:"75 g pouch", price:99,
+      blurb:"Roasted fox nuts. Light, high in fibre, and the only thing here you can eat a whole bag of guilt-free.",
+      claims:[["plant","PLANT PROTEIN"],["fibre","HIGH FIBRE"],["salt","LIGHT ON OIL"]],
+      variants:[
+        { k:"makhana-jal", name:"Jalapeño",       bg:"#1B5E3A", acc:"#C7F464", confetti:["chilli","splat","chilli","peanut"] },
+        { k:"makhana-tan", name:"Tandoori Tikka", bg:"#A32C1C", acc:"#FFD21E", confetti:["chilli","splat","peanut","chilli"] }
+      ] },
+
+    { key:"trail", type:"pouch", name:"Spicy-Sweet Trail Mix", size:"80 g pouch", price:129,
       bg:"#B4136B", acc:"#FFD21E", confetti:["peanut","chilli","splat","peanut","chilli"],
       blurb:"Jaggery-chilli peanuts, roasted makhana and dried mango. Built to be passed around a table at 2 am.",
       claims:[["plant","PLANT PROTEIN"],["fibre","HIGH FIBRE"],["bolt","ELECTROLYTES"]] },
-    { key:"nachos", type:"pouch", name:"Loaded Nachos", sub:"60 g pouch", price:99,
+
+    { key:"nachos", type:"pouch", name:"Loaded Nachos", size:"60 g pouch", price:69,
       bg:"#C4520E", acc:"#FFD21E", confetti:["chilli","splat","peanut","chilli"],
       blurb:"Baked corn chips with a loaded masala seasoning. Tastes like a street-side plate, without the oil slick.",
       claims:[["flame","BOLD FLAVOUR"],["salt","BAKED, NOT FRIED"],["fibre","HIGH FIBRE"]] },
-    { key:"bites", type:"pouch", name:"Chocolate-Banana Bites", sub:"120 g pouch", price:149,
+
+    { key:"bites", type:"pouch", name:"Chocolate-Banana Bites", size:"120 g pouch", price:149,
       bg:"#4A2C1A", acc:"#FFD21E", confetti:["peanut","splat","peanut","splat"],
-      blurb:"Dense cocoa and banana bites with plant protein and no caffeine, for the nights that end on something sweet.",
+      blurb:"Dense cocoa and banana bites with plant protein and no caffeine, for nights that end on something sweet.",
       claims:[["plant","PLANT PROTEIN"],["fibre","HIGH FIBRE"],["salt","NO CAFFEINE"]] }
   ];
   window.AP_PRODUCTS = P;
+
+  /* every buyable line, flattened: used by the order page */
+  function skuList() {
+    var out = [];
+    for (var i = 0; i < P.length; i++) {
+      var p = P[i];
+      if (p.variants) {
+        for (var v = 0; v < p.variants.length; v++) {
+          out.push({ key: p.variants[v].k, product: p, variant: p.variants[v],
+                     name: p.name + " · " + p.variants[v].name, sub: p.size, price: p.price });
+        }
+      } else {
+        out.push({ key: p.key, product: p, variant: null, name: p.name, sub: p.size, price: p.price });
+      }
+    }
+    return out;
+  }
+  window.AP_SKUS = skuList;
 
   /* ---------------- carton art ---------------- */
   function peanutSVG(w) {
@@ -177,21 +220,30 @@
     for (var i=0;i<list.length;i++) h += "<span>" + ICON[list[i][0]] + "<b style='font-weight:700'>" + list[i][1] + "</b></span>";
     return h;
   }
-  function pouch(p) {
-    return '<div class="cart face-pouch" style="--fbg:' + p.bg + ';--facc:' + p.acc + ';--facc2:' + p.bg + ';">' + confetti(p) +
+  function pouch(p, v) {
+    var bg = (v && v.bg) || p.bg, acc = (v && v.acc) || p.acc,
+        conf = (v && v.confetti) || p.confetti,
+        title = v ? v.name : p.name;
+    return '<div class="cart face-pouch" style="--fbg:' + bg + ';--facc:' + acc + ';--facc2:' + bg + ';">' +
+      confetti({ confetti: conf }) +
       '<div class="crimp"></div>' +
       '<div class="plabel">' +
         '<img class="lg" src="' + LOGO + '" alt="" />' +
-        '<div class="pname">' + p.name + '</div>' +
-        '<div class="psub">' + p.sub + '</div>' +
+        (v ? '<div class="pkind">' + p.name + '</div>' : '') +
+        '<div class="pname">' + title + '</div>' +
+        '<div class="psub">' + p.size + '</div>' +
         '<div class="pclaims">' + pouchClaims(p.claims) + '</div>' +
       '</div>' +
       '<div class="pfoot">GOOD SNACKS · BETTER TOMORROWS</div>' +
       '<div class="crimp b"></div></div>';
   }
-  function productArt(p) {
-    if (p.type === "carton") return front(F[1]);
-    return pouch(p);
+  function productArt(p, v) {
+    if (p.type === "carton") {
+      var key = (v && v.flavour) || "tam";
+      for (var i = 0; i < F.length; i++) if (F[i].key === key) return front(F[i]);
+      return front(F[1]);
+    }
+    return pouch(p, v);
   }
 
   window.AP_FACE = { front: front, back: back, side: side, top: top, pouch: pouch };
@@ -278,31 +330,63 @@
   }
 
   function initRange() {
-    var box = document.getElementById("range");
-    if (!box) return;
-    var h = "";
-    for (var i = 0; i < P.length; i++) {
-      var p = P[i];
-      h += '<article class="sku" data-key="' + p.key + '">' +
-        '<div class="cartbox">' + productArt(p) + '</div>' +
+    var boxes = document.querySelectorAll("[data-range]");
+    if (!boxes.length) return;
+
+    function cardHTML(p, idx) {
+      var v = p.variants ? p.variants[0] : null;
+      var chips = "";
+      if (p.variants) {
+        for (var i = 0; i < p.variants.length; i++) {
+          chips += '<button class="fchip" data-p="' + idx + '" data-v="' + i + '"' +
+            (i === 0 ? ' aria-pressed="true"' : ' aria-pressed="false"') + ">" + p.variants[i].name + "</button>";
+        }
+      }
+      return '<article class="sku" data-p="' + idx + '">' +
+        '<div class="cartbox" data-art="' + idx + '">' + productArt(p, v) + "</div>" +
         "<h3>" + p.name + "</h3>" +
-        '<p class="small" style="margin:-4px 0 0">' + p.sub + "</p>" +
+        '<p class="small" style="margin:-4px 0 0">' + p.size +
+          (p.variants ? " · " + p.variants.length + " flavours" : "") + "</p>" +
         "<p>" + p.blurb + "</p>" +
-        '<div class="price">&#8377;' + p.price + " " +
-        (p.link
-          ? '<a class="add" href="' + p.link + '">' + p.cta + "</a>"
-          : '<button class="add" data-add="' + p.key + '">Add to order</button>') +
-        "</div></article>";
+        (chips ? '<div class="fchips" role="group" aria-label="' + p.name + ' flavours">' + chips + "</div>" : "") +
+        '<div class="price">&#8377;' + p.price +
+        '<button class="add" data-p="' + idx + '">Add to order</button></div></article>';
     }
-    box.innerHTML = h;
-    var adds = box.querySelectorAll("button.add");
-    for (var a = 0; a < adds.length; a++) {
-      adds[a].addEventListener("click", function () {
-        var c = readCart(), k = this.getAttribute("data-add");
-        c[k] = (c[k] || 0) + 1; writeCart(c);
-        var btn = this; btn.textContent = "Added \u2713";
+
+    for (var b = 0; b < boxes.length; b++) {
+      var h = "";
+      for (var i = 0; i < P.length; i++) h += cardHTML(P[i], i);
+      boxes[b].innerHTML = h;
+      wire(boxes[b]);
+    }
+
+    function wire(box) {
+      var chosen = {};   /* product index -> variant index */
+
+      box.addEventListener("click", function (e) {
+        var chip = e.target.closest(".fchip");
+        if (chip) {
+          var pi = +chip.getAttribute("data-p"), vi = +chip.getAttribute("data-v"), p = P[pi];
+          chosen[pi] = vi;
+          var card = chip.closest(".sku");
+          card.querySelector('[data-art="' + pi + '"]').innerHTML = productArt(p, p.variants[vi]);
+          var sibs = card.querySelectorAll(".fchip");
+          for (var i = 0; i < sibs.length; i++) sibs[i].setAttribute("aria-pressed", i === vi);
+          return;
+        }
+        var btn = e.target.closest("button.add");
+        if (!btn) return;
+        var pidx = +btn.getAttribute("data-p"), prod = P[pidx];
+        var key = prod.variants ? prod.variants[chosen[pidx] || 0].k : prod.key;
+        var c = readCart();
+        c[key] = (c[key] || 0) + 1;
+        writeCart(c);
+        btn.textContent = "Added \u2713";
         setTimeout(function () { btn.textContent = "Add to order"; }, 1100);
-        if (!reduce) { var card = btn.closest(".sku"); card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake"); }
+        if (!reduce) {
+          var card2 = btn.closest(".sku");
+          card2.classList.remove("shake"); void card2.offsetWidth; card2.classList.add("shake");
+        }
       });
     }
   }
@@ -343,72 +427,74 @@
 
   /* ---------------- page: order ---------------- */
   var BUNDLES = [
-    { key: "sweet", name: "Classic Sweet", sub: "145 g carton · sweet, crunchy, the crowd-pleaser", price: 99, art: "sweet" },
-    { key: "tam", name: "Tamarind Chilli", sub: "145 g carton · sour, hot, the hero flavour", price: 99, art: "tam" },
-    { key: "smoky", name: "Smoky Chipotle", sub: "145 g carton · dry smoke, lowest sugar", price: 99, art: "smoky" },
-    { key: "trail", name: "Spicy-Sweet Trail Mix", sub: "80 g pouch · jaggery chilli, makhana, dried mango", price: 129, art: "pouch:trail" },
-    { key: "nachos", name: "Loaded Nachos", sub: "60 g pouch · baked corn chips, loaded masala", price: 99, art: "pouch:nachos" },
-    { key: "bites", name: "Chocolate-Banana Bites", sub: "120 g pouch · cocoa, banana, plant protein, no caffeine", price: 149, art: "pouch:bites" },
-    { key: "trio", name: "The Trio", sub: "One of each flavour. The easiest way to find your one.", price: 279, art: "tam" },
-    { key: "party", name: "House Party Pack", sub: "Six cartons, mixed flavours. Stock the shelf before the weekend.", price: 499, art: "smoky" }
+    { key: "trio", name: "The Peanut Trio", sub: "One carton of each peanut flavour. The easiest way to find your one.", price: 279, art: "carton:tam" },
+    { key: "party", name: "House Party Pack", sub: "Six packs, mixed across the range. Stock the shelf before the weekend.", price: 499, art: "pouch:makhana" }
   ];
   var FREE_AT = 499;
 
   function initOrder() {
     var list = document.getElementById("pick");
     if (!list) return;
-    var cart = readCart(), h = "";
-    for (var i = 0; i < BUNDLES.length; i++) {
-      var b = BUNDLES[i], art = "";
-      if (b.art.indexOf("pouch:") === 0) {
-        var pk = b.art.split(":")[1];
-        for (var m = 0; m < P.length; m++) if (P[m].key === pk) art = pouch(P[m]);
+
+    var lines = [];
+    var skus = skuList();
+    for (var i = 0; i < skus.length; i++) {
+      lines.push({ key: skus[i].key, name: skus[i].name, sub: skus[i].sub, price: skus[i].price,
+                   art: productArt(skus[i].product, skus[i].variant) });
+    }
+    for (var b = 0; b < BUNDLES.length; b++) {
+      var bd = BUNDLES[b], art = "";
+      if (bd.art.indexOf("pouch:") === 0) {
+        var pk = bd.art.split(":")[1];
+        for (var m = 0; m < P.length; m++) if (P[m].key === pk) art = pouch(P[m], P[m].variants ? P[m].variants[0] : null);
       } else {
-        for (var j = 0; j < F.length; j++) if (F[j].key === b.art) art = front(F[j]);
+        var fk = bd.art.split(":")[1];
+        for (var n = 0; n < F.length; n++) if (F[n].key === fk) art = front(F[n]);
       }
-      h += '<div class="pickrow" data-key="' + b.key + '">' +
-        '<div class="cartbox">' + art + "</div>" +
-        "<div><h3>" + b.name + "</h3><p>" + b.sub + "</p><p style='margin-top:6px;font-family:var(--display);font-weight:700;color:var(--text)'>&#8377;" + b.price + "</p></div>" +
-        '<div class="qty"><button data-step="-1" aria-label="Remove one ' + b.name + '">–</button>' +
-        '<output data-q="' + b.key + '">' + (cart[b.key] || 0) + "</output>" +
-        '<button data-step="1" aria-label="Add one ' + b.name + '">+</button></div></div>';
+      lines.push({ key: bd.key, name: bd.name, sub: bd.sub, price: bd.price, art: art, bundle: true });
+    }
+
+    var cart = readCart(), h = "";
+    for (var j = 0; j < lines.length; j++) {
+      var L = lines[j];
+      h += '<div class="pickrow' + (L.bundle ? " bundle" : "") + '" data-key="' + L.key + '">' +
+        '<div class="cartbox">' + L.art + "</div>" +
+        "<div><h3>" + L.name + "</h3><p>" + L.sub + "</p>" +
+        "<p class='rowprice'>&#8377;" + L.price + "</p></div>" +
+        '<div class="qty"><button data-step="-1" aria-label="Remove one ' + L.name + '">–</button>' +
+        '<output data-q="' + L.key + '">' + (cart[L.key] || 0) + "</output>" +
+        '<button data-step="1" aria-label="Add one ' + L.name + '">+</button></div></div>';
     }
     list.innerHTML = h;
 
-    function priceOf(k) {
-      for (var i = 0; i < BUNDLES.length; i++) if (BUNDLES[i].key === k) return BUNDLES[i].price;
-      return 0;
-    }
-    function nameOf(k) {
-      for (var i = 0; i < BUNDLES.length; i++) if (BUNDLES[i].key === k) return BUNDLES[i].name;
-      return k;
-    }
+    function priceOf(k) { for (var i = 0; i < lines.length; i++) if (lines[i].key === k) return lines[i].price; return 0; }
+    function nameOf(k) { for (var i = 0; i < lines.length; i++) if (lines[i].key === k) return lines[i].name; return k; }
+
     function paint() {
-      var c = readCart(), sub = 0, items = 0, lines = [];
+      var c = readCart(), sub = 0, items = 0, out = [];
       for (var k in c) {
         if (!c.hasOwnProperty(k) || !c[k]) continue;
         sub += priceOf(k) * c[k]; items += c[k];
-        lines.push(c[k] + " × " + nameOf(k));
+        out.push(c[k] + " × " + nameOf(k));
       }
       var ship = (sub === 0 || sub >= FREE_AT) ? 0 : 49;
       document.getElementById("sumitems").textContent = items ? items + (items === 1 ? " item" : " items") : "Nothing yet";
       document.getElementById("sumsub").textContent = "\u20B9" + sub;
       document.getElementById("sumship").textContent = sub === 0 ? "—" : (ship ? "\u20B9" + ship : "Free");
       document.getElementById("sumtot").textContent = "\u20B9" + (sub + ship);
-      var pct = Math.min(100, Math.round(sub / FREE_AT * 100));
-      document.getElementById("freebar").style.width = pct + "%";
+      document.getElementById("freebar").style.width = Math.min(100, Math.round(sub / FREE_AT * 100)) + "%";
       document.getElementById("freenote").textContent = sub >= FREE_AT
-        ? "Delivery is on us."
-        : "Add \u20B9" + (FREE_AT - sub) + " more for free delivery.";
+        ? "Delivery is on us." : "Add \u20B9" + (FREE_AT - sub) + " more for free delivery.";
       var place = document.getElementById("place");
       place.setAttribute("aria-disabled", items ? "false" : "true");
       place.style.opacity = items ? "1" : ".5";
-      window.AP_ORDER_LINES = lines;
+      window.AP_ORDER_LINES = out;
       window.AP_ORDER_TOTAL = sub + ship;
       var os = document.querySelectorAll("[data-q]");
       for (var i = 0; i < os.length; i++) os[i].textContent = c[os[i].getAttribute("data-q")] || 0;
       paintCount();
     }
+
     list.addEventListener("click", function (e) {
       var btn = e.target.closest("button[data-step]");
       if (!btn) return;
@@ -422,12 +508,12 @@
     document.getElementById("place").addEventListener("click", function (e) {
       e.preventDefault();
       if (!window.AP_ORDER_LINES || !window.AP_ORDER_LINES.length) return;
-      var name = (document.getElementById("fname") || {}).value || "",
-        phone = (document.getElementById("fphone") || {}).value || "",
-        addr = (document.getElementById("faddr") || {}).value || "";
+      var nm = (document.getElementById("fname") || {}).value || "",
+          ph = (document.getElementById("fphone") || {}).value || "",
+          ad = (document.getElementById("faddr") || {}).value || "";
       var msg = "AFTER PARTY order\n" + window.AP_ORDER_LINES.join("\n") +
         "\nTotal: \u20B9" + window.AP_ORDER_TOTAL +
-        (name ? "\nName: " + name : "") + (phone ? "\nPhone: " + phone : "") + (addr ? "\nAddress: " + addr : "");
+        (nm ? "\nName: " + nm : "") + (ph ? "\nPhone: " + ph : "") + (ad ? "\nAddress: " + ad : "");
       window.open("https://wa.me/910000000000?text=" + encodeURIComponent(msg), "_blank", "noopener");
     });
   }
