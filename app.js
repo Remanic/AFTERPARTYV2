@@ -13,12 +13,6 @@
       taste:"Roasted peanuts with a classic sweet crunch. The one the whole table reaches for first, and the one that empties fastest.",
       func:"Plant protein and fibre from the peanut itself, with sodium kept deliberately low, so a second handful doesn't cost you the morning." },
 
-    { k:"peanuts-smoky", cat:"Peanuts", flavour:"Smoky Chipotle", price:159, size:"145 g",
-      img:"pack-smoky-chipotle.png", tint:"#0C4032",
-      claims:"Plant protein · Low sodium · High fibre",
-      taste:"Dry smoke and a slow chipotle burn. The least sweet peanut in the range, and the one that actually goes with a drink.",
-      func:"Bold seasoning over the same plant protein and fibre base, with no artificial colours doing the work for it." },
-
     { k:"peanuts-tam", cat:"Peanuts", flavour:"Tamarind Chilli", price:159, size:"145 g",
       img:"pack-tamarind-chilli.png", tint:"#A1121F",
       claims:"Electrolytes · Plant protein · Gut friendly",
@@ -56,6 +50,11 @@
     return '<div class="cart photo"><img src="' + s.img + '" alt="AFTER PARTY ' + s.flavour + ' ' + s.cat + ', ' + s.size + ' box" loading="lazy" /></div>';
   }
   window.AP_PACK = pack;
+
+  function bySku(key) {
+    for (var i = 0; i < SKU.length; i++) if (SKU[i].k === key) return SKU[i];
+    return SKU[0];
+  }
 
   /* ---------------- cart ---------------- */
   var KEY = "ap_cart_v2";
@@ -103,8 +102,8 @@
 
   /* ---------------- order page ---------------- */
   var BUNDLES = [
-    { key:"trio", name:"The Trio", sub:"One box each of Peanuts, Makhana and Chips. The easiest way to find your one.", price:449, art:SKU[2] },
-    { key:"party", name:"House Party Pack", sub:"All six flavours. Stock the shelf before the weekend and stop thinking about it.", price:899, art:SKU[4] }
+    { key:"trio", name:"The Trio", sub:"One box each of Peanuts, Makhana and Chips. The easiest way to find your one.", price:449, art:bySku("peanuts-tam") },
+    { key:"party", name:"House Party Pack", sub:"All six flavours. Stock the shelf before the weekend and stop thinking about it.", price:899, art:bySku("chips-bbq") }
   ];
   var FREE_AT = 499;
 
@@ -186,7 +185,7 @@
   /* ---------------- misc ---------------- */
   function initBits() {
     var hs = document.getElementById("herostack");
-    if (hs) hs.innerHTML = '<div class="cartbox">' + pack(SKU[4]) + '</div><div class="cartbox">' + pack(SKU[2]) + "</div>";
+    if (hs) hs.innerHTML = '<div class="cartbox">' + pack(bySku("makhana-tan")) + '</div><div class="cartbox">' + pack(bySku("peanuts-tam")) + "</div>";
     var minis = document.querySelectorAll("[data-mini]");
     for (var i = 0; i < minis.length; i++) {
       var k = minis[i].getAttribute("data-mini");
