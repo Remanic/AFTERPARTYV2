@@ -95,16 +95,65 @@
     }
     return h;
   }
-  function jarPeanuts(cls) {
-    var g = "", spots = [[18,14,-14],[50,9,12],[82,16,20],[33,33,5],[67,35,-10],[16,52,16],[50,56,-4],[84,50,10]];
-    for (var i = 0; i < spots.length; i++) {
-      var s = spots[i];
-      g += '<g transform="translate(' + s[0] + " " + s[1] + ") rotate(" + s[2] + ')">' +
-        '<ellipse cx="-5" cy="0" rx="7.6" ry="6.7" fill="#C9813A"/><ellipse cx="5" cy="0" rx="7.6" ry="6.7" fill="#C9813A"/>' +
-        '<ellipse cx="-5" cy="-1.7" rx="3.2" ry="2.1" fill="#EBB169"/><ellipse cx="5" cy="1.5" rx="2.6" ry="1.8" fill="#A8641F"/></g>';
+  /* what you see through the window changes with the product */
+  var FILL = {
+    Peanuts:  { body:"#C9813A", hi:"#EBB169", lo:"#A8641F" },
+    Makhana:  { body:"#EFE0BC", hi:"#FFF8E8", lo:"#B39A63" },
+    Chips:    { body:"#E8A33D", hi:"#F6C976", lo:"#B9741D" }
+  };
+
+  function windowArt(cat, cls) {
+    var c = FILL[cat] || FILL.Peanuts, g = "";
+    if (cat === "Makhana") {
+      var mk = [[18,16,1],[48,10,1.12],[80,17,.95],[33,36,1.05],[66,34,.92],[15,54,1],[49,57,1.08],[83,52,.95]];
+      for (var i = 0; i < mk.length; i++) {
+        var m = mk[i];
+        g += '<g transform="translate(' + m[0] + " " + m[1] + ") scale(" + m[2] + ')">' +
+          '<circle cx="0" cy="0" r="9" fill="' + c.body + '" stroke="' + c.lo + '" stroke-width=".7"/>' +
+          '<circle cx="-4.6" cy="-5" r="4.6" fill="' + c.body + '" stroke="' + c.lo + '" stroke-width=".7"/>' +
+          '<circle cx="5.2" cy="-3.6" r="4" fill="' + c.body + '" stroke="' + c.lo + '" stroke-width=".7"/>' +
+          '<circle cx="0" cy="0" r="8.4" fill="' + c.body + '"/>' +
+          '<circle cx="-4.6" cy="-5" r="4" fill="' + c.body + '"/>' +
+          '<circle cx="5.2" cy="-3.6" r="3.4" fill="' + c.body + '"/>' +
+          '<ellipse cx="-2.6" cy="-2" rx="3.4" ry="2.6" fill="' + c.hi + '"/>' +
+          '<path d="M-3 4.4q3 2.4 6.4 0" stroke="' + c.lo + '" stroke-width=".8" fill="none" opacity=".7"/></g>';
+      }
+    } else if (cat === "Chips") {
+      /* a ruffled disc, built from alternating lobes so it reads as a wavy crisp */
+      var wavy = function (rOut, rIn) {
+        var n = 9, sq = 0.78, d = "", a0 = 0;
+        var px = (rIn * Math.cos(a0)).toFixed(2), py = (rIn * Math.sin(a0) * sq).toFixed(2);
+        d = "M" + px + " " + py;
+        for (var t = 1; t <= n; t++) {
+          var aMid = 2 * Math.PI * (t - 0.5) / n, aEnd = 2 * Math.PI * t / n;
+          var cx = (rOut * Math.cos(aMid)).toFixed(2), cy = (rOut * Math.sin(aMid) * sq).toFixed(2);
+          var ex = (rIn * Math.cos(aEnd)).toFixed(2), ey = (rIn * Math.sin(aEnd) * sq).toFixed(2);
+          d += "Q" + cx + " " + cy + " " + ex + " " + ey;
+        }
+        return d + "Z";
+      };
+      var ch = [[19,16,-16,1],[53,11,12,1.1],[82,19,24,.92],[31,40,6,1.05],[67,42,-14,.95],[17,58,16,.9],[52,60,-6,1]];
+      for (var j = 0; j < ch.length; j++) {
+        var k = ch[j];
+        g += '<g transform="translate(' + k[0] + " " + k[1] + ") rotate(" + k[2] + ") scale(" + k[3] + ')">' +
+          '<path d="' + wavy(12, 8.6) + '" fill="' + c.body + '"/>' +
+          '<path d="' + wavy(8.2, 5.6) + '" fill="' + c.hi + '" opacity=".55"/>' +
+          '<circle cx="-3.4" cy="-1.4" r="1.15" fill="' + c.lo + '"/>' +
+          '<circle cx="3.2" cy="1.6" r="1" fill="' + c.lo + '"/>' +
+          '<circle cx="1" cy="-3" r=".8" fill="' + c.lo + '" opacity=".8"/></g>';
+      }
+    } else {
+      var pn = [[18,14,-14],[50,9,12],[82,16,20],[33,33,5],[67,35,-10],[16,52,16],[50,56,-4],[84,50,10]];
+      for (var n = 0; n < pn.length; n++) {
+        var q = pn[n];
+        g += '<g transform="translate(' + q[0] + " " + q[1] + ") rotate(" + q[2] + ')">' +
+          '<ellipse cx="-5" cy="0" rx="7.6" ry="6.7" fill="' + c.body + '"/><ellipse cx="5" cy="0" rx="7.6" ry="6.7" fill="' + c.body + '"/>' +
+          '<ellipse cx="-5" cy="-1.7" rx="3.2" ry="2.1" fill="' + c.hi + '"/><ellipse cx="5" cy="1.5" rx="2.6" ry="1.8" fill="' + c.lo + '"/></g>';
+      }
     }
     return '<svg class="' + (cls || "") + '" viewBox="0 0 100 70" aria-hidden="true">' + g + "</svg>";
   }
+
   function claimRow(list) {
     var h = "";
     for (var i = 0; i < list.length; i++) h += "<span>" + ICON[list[i][0]] + "<b style='font-weight:700'>" + list[i][1] + "</b></span>";
@@ -117,8 +166,8 @@
         '<div class="vt l">FOR<br>THE<br>HOUR<br>AFTER<u></u></div>' +
         '<div class="jarwrap">' +
           '<div class="ribbon">GOOD<br>SNACKS<br>BETTER<br>TOMORROWS<i>&#9889;</i></div>' +
-          '<div class="neck">' + jarPeanuts() + "</div>" +
-          '<div class="jar">' + jarPeanuts("pnts") +
+          '<div class="neck">' + windowArt(s.cat) + "</div>" +
+          '<div class="jar">' + windowArt(s.cat, "pnts") +
             '<img class="lg" src="' + LOGO + '" alt="" />' +
             '<div class="flav' + two + '">' + s.flavour + "</div>" +
             '<div class="arach">' + s.cat.toUpperCase() + "</div>" +
