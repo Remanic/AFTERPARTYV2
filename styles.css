@@ -179,15 +179,20 @@ nav a[aria-current=page]{color:var(--text); border-bottom-color:var(--accent-ink
 .retailer{display:flex; flex-direction:column; gap:10px; text-decoration:none; padding:18px; border-radius:16px;
   border:1px solid var(--line); background:var(--card);
   transition:transform .15s ease, border-color .15s ease, background-color .15s ease}
-.retailer:hover{transform:translateY(-3px); border-color:var(--accent-ink); background:color-mix(in srgb, var(--accent-ink) 10%, var(--card))}
+.retailer:hover{transform:translateY(-3px); border-color:var(--rc); background:color-mix(in srgb, var(--rc) 12%, var(--card))}
+html[data-phase=dawn] .retailer:hover, html[data-phase=morning] .retailer:hover{border-color:var(--rc-deep); background:color-mix(in srgb, var(--rc-deep) 10%, var(--card))}
+/* retailer marks keep their own brand colour; the label flips with the page theme.
+   --rc is the shade used behind black text (dark themes), --rc-deep behind white (light themes). */
 .rlogo{display:flex; align-items:center; justify-content:center; height:48px; border-radius:12px;
-  background:var(--text); color:var(--bg);
+  background:var(--rc); color:#111111;
   font-family:var(--display); font-weight:800; font-size:1.04rem; letter-spacing:-.04em; gap:6px;
   transition:background-color .45s ease, color .45s ease}
+html[data-phase=dawn] .rlogo, html[data-phase=morning] .rlogo{background:var(--rc-deep); color:#FFFFFF}
 .rlogo svg{width:17px; height:17px}
 .retailer b{font-family:var(--display); font-weight:700; font-size:.86rem}
 .retailer span{font-family:var(--display); font-size:.72rem; color:var(--muted)}
 .retailer .go{font-family:var(--display); font-weight:700; font-size:.74rem; color:var(--accent-ink)}
+.retailer b{color:var(--text)}
 
 /* ---------- dial ---------- */
 .dial{display:flex; align-items:center; gap:11px; flex:none}
