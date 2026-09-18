@@ -166,9 +166,17 @@ nav a[aria-current=page]{color:var(--text); border-bottom-color:var(--accent-ink
 
 .vtaste{font-size:.9rem; color:var(--text); border-left:2px solid var(--accent-ink); padding-left:12px; margin:0}
 
+/* ---------- photographic packs ---------- */
+.cart.photo{background:none; box-shadow:none; border-radius:0; overflow:visible}
+.cart.photo::before{content:none}
+.cart.photo img{width:100%; height:auto; display:block;
+  filter:drop-shadow(0 16px 26px rgba(0,0,0,.34)); transition:filter .45s ease}
+html[data-phase=dawn] .cart.photo img, html[data-phase=morning] .cart.photo img{
+  filter:drop-shadow(0 14px 24px rgba(51,22,44,.22))}
+.claims-line{font-family:var(--display); font-weight:600; font-size:.74rem; letter-spacing:.02em; color:var(--muted); margin:-2px 0 2px}
+
 /* ---------- category label on a product card ---------- */
-.sku .cat{font-family:var(--display); font-weight:700; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
-  color:var(--accent-ink); margin:2px 0 -6px}
+.sku .cat{font-family:var(--display); font-weight:800; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; margin:2px 0 -6px}
 
 /* ---------- retailer buttons ---------- */
 .retailers{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-top:26px}
@@ -210,7 +218,7 @@ html[data-phase=dawn] .rlogo, html[data-phase=morning] .rlogo{background:var(--r
 h1{font-size:clamp(38px,6.6vw,76px)}
 .heroline{margin-top:22px; max-width:48ch; font-size:clamp(17px,1vw + 14px,20px); color:var(--muted)}
 .herostack{display:flex; justify-content:center; align-items:center; min-height:330px}
-.herostack .cartbox{width:min(46%,210px)}
+.herostack .cartbox{width:min(48%,225px)}
 .herostack .cartbox:first-child{transform:rotate(-8deg) translate(20px,10px); z-index:0}
 .herostack .cartbox:last-child{transform:rotate(5deg) translate(-16px,-6px); z-index:1}
 .timeline{display:grid; grid-template-columns:repeat(3,1fr); margin-top:40px; border-top:1px solid var(--line)}
@@ -299,7 +307,7 @@ input[type=range]::-moz-range-thumb{width:20px; height:20px; border-radius:50%; 
 .ordergrid{display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr); gap:clamp(24px,4vw,46px); align-items:start}
 @media (max-width:900px){ .ordergrid{grid-template-columns:1fr} }
 .pick{display:grid; gap:14px}
-.pickrow{display:grid; grid-template-columns:72px minmax(0,1fr) auto; gap:16px; align-items:center;
+.pickrow{display:grid; grid-template-columns:64px minmax(0,1fr) auto; gap:16px; align-items:center;
   border:1px solid var(--line); border-radius:var(--r); padding:16px;
   background:var(--card)}
 .pickrow h3{font-size:1.06rem; margin-bottom:3px}
